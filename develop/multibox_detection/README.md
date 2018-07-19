@@ -1,4 +1,3 @@
-# Multibox
 
 # MULTIBOX - MOUSE DETECTION
 
