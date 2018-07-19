@@ -5,23 +5,23 @@
 This is an implementation of the Multibox detection system proposed by Szegedy et al. in Scalable High Quality Object
 Detection. Currently this repository uses the [Inception-Reset-v2](https://arxiv.org/abs/1602.07261) network as the base network.
 
-code : [https://github.com/gvanhorn38/multibox](https://github.com/gvanhorn38/multibox)  
 paper: [https://arxiv.org/abs/1412.1441](https://arxiv.org/abs/1412.1441)  
-data: [https://www.dropbox.com/home/team_folder/MARS/tf_dataset_detection/top_correct](https://www.dropbox.com/home/team_folder/MARS/tf_dataset_detection/top_correct)
+data: [http://www.vision.caltech.edu/~segalinc/git_data/develop/](http://www.vision.caltech.edu/~segalinc/git_data/develop/)
 
 ![alt text](http://yeephycho.github.io/blog_img/Inception_v4_hires.jpg)
 
 ##  PREPARE INPUT FOR MULTIBOX DETECTOR FROM AMT ANNOTATIONS
 [https://github.com/gvanhorn38/inception/tree/master/inputs](https://github.com/gvanhorn38/inception/tree/master/inputs)
 
-All files related to the **top view** detection can be found [here](https://www.dropbox.com/home/team_folder/MARS/tf_dataset_detection/top_correct).
+All files related to the **top view** detection can be found [here](http://www.vision.caltech.edu/~segalinc/git_data/develop/top/).
 
 
 #### STEPS:  
 
-0. A_annotation steps are required to be done before proceeding further
+0. AMT_annotation steps are required to be done before proceeding further
 1. Check if saved images are ok: check_img_fromat.sh
-2. Convert dictionary of info into tf records in order to make it work with the detector. Set the three sets of data: AMT2tfrecords.py
+2. Convert dictionary of info into tf records in order to make it work with the detector. Set the three sets of data: dict2tfrecords.py
+3. step to train, test and evaluation your models are in `cmds_top_all_set_separate.txt`
 
 #### DETAILS: 
 
@@ -122,7 +122,7 @@ create(
     -NUM_TRAIN_EXAMPLES: this, along with BATCH_SIZE, is used to compute the number of iterations in an epoch  
     -NUM_TRAIN_ITERATIONS:	This is how many iterations to run before stopping  
     Check out also the other conf parameters
-3. `visualize_input.py` debug your image augmentation setting by visualizing the inputs to the network
+3. `visualize_input_imsize.py` debug your image augmentation setting by visualizing the inputs to the network
 4. Train_warmup: Before training the whole network, you need to warmup the detection heads. I call this finetuning.  
 5. Train_detection: Therefore the training procedure consists of 2 calls to the `train.py` script. First you finetune. Once the detection heads have warmed up, you can train the whole model. Check the training sometimes checking on the tensorboard w.r.t. the validation set
 6. `visualize_val.py`: visualize predicted bboxes and gt. Run `visualize_val_imsize` if you have a validation set, you can visualize the ground thuth boxes and the predicted boxes
@@ -133,11 +133,8 @@ create(
 
 Note: You can download COCO evaluation tool from [here](https://github.com/pdollar/coco). Remember to run make on PythonAPI in order to get it work 
 
-1. `check_results_id.py`: check out the id of images to check that all of them have been processed
-2. `eval.py` : evaluate boxes with coco evaluation metrics exectue eval_prcurve
-3. to plot pr curve and histograms: `prcurve_hist_cocoeval.py`
-4. `eval_distmice.py` allows to get evaluation when mice are far apart, close or overlapped
-5. `eval_diagnosis.py` see which images have poor localization, false positive and false negative
+- `eval.py` : evaluate boxes with coco evaluation metrics exectue eval_prcurve
+- to plot precision-recall curve : `prcurve_separate.py`
 
 #### DETAILS:
 
@@ -205,8 +202,8 @@ you'll be able to train the detection model. First, you can debug your image aug
 
 ```sh
 python visualize_inputs.py \
---tfrecords ../tf_dataset_detection/data_10k_top/train* \
---config ../tf_dataset_detection/data_10k_top/config_train.yaml
+--tfrecords ../tf_dataset_detection/top_all_set_separate/black/train* \
+--config ../tf_dataset_detection/top_all_set_separate/black/config_train.yaml
 ```
 
 Once you are ready for training, you should download the pretrained **inception-resnet-v2** network and use it as a starting point.
@@ -222,10 +219,10 @@ Therefore the training procedure consists of 2 calls to the train.py script. Fir
 
 ```sh
 python train.py \
---tfrecords ../tf_dataset_detection/data_10k_top/train* \
---priors ../tf_dataset_detection/data_10k_top/priors.pkl \
---logdir ../tf_dataset_detection/data_10k_top/finetune \
---config ../tf_dataset_detection/data_10k_top/config_train.yaml \
+--tfrecords ../tf_dataset_detection/top_all_set_separate/black/train* \
+--priors ../tf_dataset_detection/top_all_set_separate/black/priors.pkl \
+--logdir ../tf_dataset_detection/top_all_set_separate/black/finetune \
+--config ../tf_dataset_detection/top_all_set_separate/black/config_train.yaml \
 --pretrained_model ./inception_resnet_v2_2016_08_30.ckpt \
 --fine_tune
 ```
@@ -234,21 +231,21 @@ Once the detection heads have warmed up, you can train the whole model:
 
 ```sh
 python train.py \
---tfrecords ../tf_dataset_detection/data_10k_top/train* \
---priors ../tf_dataset_detection/data_10k_top/priors.pkl \
---logdir ../tf_dataset_detection/data_10k_top \
---config ../tf_dataset_detection/data_10k_top/config_train.yaml \
---pretrained_model ../tf_dataset_detection/data_10k_top/finetune
+--tfrecords ../tf_dataset_detection/top_all_set_separate/black/train* \
+--priors ../tf_dataset_detection/top_all_set_separate/black/priors.pkl \
+--logdir ../tf_dataset_detection/top_all_set_separate/black \
+--config ../tf_dataset_detection/top_all_set_separate/black/config_train.yaml \
+--pretrained_model ../tf_dataset_detection/top_all_set_separate/black/finetune
 ```
 
 If you have a validation set, you can visualize the ground truth boxes and the predicted boxes:
 
 ```sh
 python visualize_val.py \
---tfrecords ../tf_dataset_detection/data_10k_top/val* \
---priors  ../tf_dataset_detection/data_10k_top/priors.pkl \
---checkpoint_path ../tf_dataset_detection/data_10k_top/model.ckpt-300000 \
---config ../tf_dataset_detection/data_10k_top/config_train.yaml
+--tfrecords ../tf_dataset_detection/top_all_set_separate/black/val* \
+--priors  ../tf_dataset_detection/top_all_set_separate/black/priors.pkl \
+--checkpoint_path ../tf_dataset_detection/top_all_set_separate/black/model.ckpt-300000 \
+--config ../tf_dataset_detection/top_all_set_separate/black/config_train.yaml
 ```
 
 At "application time" you can run the detect script to generate predicted boxes on new images.
@@ -256,18 +253,18 @@ You can debug your detection setting by using another visualization script:
 
 ```sh
 python detect.py \
---tfrecords ../tf_dataset_detection/data_10k_top/test* \
---priors ../tf_dataset_detection/data_10k_top/priors.pkl \
---checkpoint_path ../tf_dataset_detection/data_10k_top/model.ckpt-300000 \
---save_dir ../tf_dataset_detection/data_10k_top/ \
---config ../tf_dataset_detection/data_10k_top/config_detect.yaml \
+--tfrecords ../tf_dataset_detection/top_all_set_separate/black/test* \
+--priors ../tf_dataset_detection/top_all_set_separate/black/priors.pkl \
+--checkpoint_path ../top_all_set_separate/black/data_10k_top/model.ckpt-300000 \
+--save_dir ../tf_dataset_detection/top_all_set_separate/black/ \
+--config ../tf_dataset_detection/top_all_set_separate/black/config_detect.yaml \
 --max_iterations 0
 
 python visualize_detect.py \
---tfrecords ../tf_dataset_detection/data_10k_top/test* \
---priors ../tf_dataset_detection/data_10k_top/priors.pkl \
---checkpoint_path ../tf_dataset_detection/data_10k_top/model.ckpt-300000 \
---config ../tf_dataset_detection/data_10k_top/config_detect.yaml
+--tfrecords ../tf_dataset_detection/top_all_set_separate/black/test* \
+--priors ../tf_dataset_detection/top_all_set_separate/black/priors.pkl \
+--checkpoint_path ../tf_dataset_detection/top_all_set_separate/black/model.ckpt-300000 \
+--config ../tf_dataset_detection/top_all_set_separate/black/config_detect.yaml
 ```
 
 **Export & Compress**
@@ -276,57 +273,49 @@ To export a model for easy use on a mobile device you can use:
 
 ```sh
 python export.py \
---checkpoint_path ../tf_dataset_detection/data_10k_top \
---export_dir ../tf_dataset_detection/data_10k_top \
+--checkpoint_path ../tf_dataset_detection/top_all_set_separate/black \
+--export_dir ../tf_dataset_detection/top_all_set_separate/black \
 --export_version 1 \
---config ../tf_dataset_detection/data_10k_topconfig_export.yaml
+--config ../tf_dataset_detection/config_export.yaml
 ```
 The input node is called images and the output node is called Predictions.
 
 If you are going to use the model with TensorFlow Serving then you can use the following:
 ```sh
 python export.py \
---checkpoint_path ../tf_dataset_detection/data_10k_top \
---export_dir ../tf_dataset_detection/data_10k_top \
+--checkpoint_path ../tf_dataset_detection/top_all_set_separate/black \
+--export_dir ../tf_dataset_detection/top_all_set_separate/black \
 --export_version 1 \
---config ../tf_dataset_detection/data_10k_top/config_export.yaml \
+--config ../tf_dataset_detection/top_all_set_separate/black/config_export.yaml \
 --serving
 ```
 
 
 ##                    FILES INCLUDED IN THIS FOLDER
 
-
-`cmds.txt` file contains all the commands needed to run multibox detection, step by step
-
 |Name |                                Description|
 |-----|--------------------------------------------|
-|AMT2tfrecords.py|                     convert dectionary to dataset in tf format|
-|AMT2tfrectrds_separate.py|            convert dectionary to tf format for one single mouse|
-|check_img_format.sh|                  check that saved images are JPEG type|
+|cmds_front_allset_separate|           bash command to run multibox detection, step by step on front view videos
+|cmds_top_allset_separate|             bash command to run multibox detection, step by step on top view videos
 |config.py|                            parse the config.yaml|
 |create_tfrecords.py|                  utility to convert dictionary into tf format|
-|prior_generator.py |                  utility to generate the prior based on priors.py|
-|priors.py          |                  utility to generate aspect rations and priors bboxes|
-|inputs.py          |                  input pipeline for training the detector|
-|inputs_addinfo.py  |                  input pipeline for training the detector where I added path filenames and actions|
-|visualize_inputs.py |                 visualization of input to check that everything is set up correctly on the resized images with bboxes|
-|visualize_inputs_imsize.py  |         visualization of input on the original image size|
-|model.py      |                       network model|
-|model_test.py   |                     basic tests to ensure the model builds correctly|
-|loss.py        |                      loss function|
-|export.py      |                      export a model, loading in the moving averages and saving those|
-|train.py        |                     finetune and trains the network|
-|visualize_val.py   |                  visualize prediction and gt on images|
-|visualize_val_imsize.py  |            visualize prediction and gt on original image size|
 |detect.py          |                  inference on test data|
-|detect_video.py    |                  inference on video|
 |detect_imsize.py     |                inference on test data returning results on image size scale|
+|export.py      |                      export a model, loading in the moving averages and saving those|
+|inputs.py          |                  input pipeline for training the detector|
+|inputs_moreinfo.py  |                 input pipeline for training the detector where I added path filenames and actions|
+|loss.py        |                      loss function|
+|model.py      |                       network model|
+|priors.py          |                  utility to generate aspect rations and priors bboxes|
+|prior_generator.py |                  utility to generate the prior based on priors.py|
+|train.py        |                     finetune and trains the network|
 |visualize_detect.py    |              visualize inference result|
 |visualize_detect_imsize.py   |        visualize inference result on original image|
-|visualize_detect_imsize_overlap.py|   visualize inference and|
-|visualize_detect_separate.py |        visualize inference on separate mice|
 |visualize_detect_separate_json.py |   visualize inference separate mice from json files|
+|visualize_inputs_imsize.py  |         visualization of input on the original image size|
+|visualize_inputs.py |                 visualization of input to check that everything is set up correctly on the resized images with bboxes|
+|visualize_val.py   |                  visualize prediction and gt on images|
+|visualize_val_imsize.py  |            visualize prediction and gt on original image size|
 
 `/evaluation`: pycocotools, coco, build folders for COCO evaluation
 
@@ -335,10 +324,7 @@ python export.py \
 |check_results_id.py|                 check that ids and results are ok|
 |eval.py               |               use the COCO evaluation pipeline to evaluate performances|
 |eval_inputs.py       |                input pipeline for training the evaluation|
-|eval_diagnosis.py     |               see which images have poor localization, false positive and false negative|
-|eval_distmice.py       |              evalaute for different distance between mice to see when it doesn't work well|
-|evaluation_test.py      |             ignore this|
-|prcurve_hist_cocoeval.py  |           compute pr curves from eval.py saved pickle cocoEval file|
+|prcurve_separate.py  |           compute pr curves from eval.py saved pickle cocoEval file|
 
 
 #### ARCHITECTURE
