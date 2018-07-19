@@ -8,6 +8,8 @@ We train classifiers for `close investigation, mount, attack`  and `interaction`
 We tested on the rae features and on windowed features computer with a given radius around a frame.
 To use the script you just need to change the `video_path` path where are the videos, features and annotations, the `label2id` variable to map the nominal behaviors into labels.
 
+Pretrained model can be found [here](http://www.vision.caltech.edu/~segalinc/git_data/gui/v1_7.zip)
+
 ## IN THIS FOLDER
 
 |Filename | Description|
