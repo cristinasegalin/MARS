@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=MARS_dump_bento_dir
+Comment=Utility to dump all predictions into bento format
+Exec=python /home/djalab/Desktop/MARS_v1_7/dump_bento_dir.py
+Icon=/home/djalab/Desktop/MARS_v1_7/icons/bento.png
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Utility;

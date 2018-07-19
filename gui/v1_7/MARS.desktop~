@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Name=MARS_v1_7
+Comment=MARS
+Exec=sh /home/djalab/Desktop/MARS_v1_7/MARS.sh
+Icon=/home/djalab/Desktop/MARS_v1_7/icons/mouse.png
+Path=/home/djalab/Desktop/MARS_v1_7/
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Utility;

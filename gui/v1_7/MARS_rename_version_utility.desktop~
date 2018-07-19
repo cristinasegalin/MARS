@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=MARS_rename_version_utility
+Comment=Utility to rename old version to the last one
+Exec=python ./rename_version_utility.py
+Icon=./icons/rename.jpeg
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Utility;
