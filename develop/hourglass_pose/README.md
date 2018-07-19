@@ -46,9 +46,8 @@ Note: You can download COCO evaluation tool from [here](https://github.com/pdoll
 
 ##### Dataset Setup:
 
-Once you have your annotation files, modify `AMT2tfrecords_basic.py`(a script that converts inputs to tfrecord format)
-to contain your annotation information. Everything you need to change should have a **TODO** marked next to it in the code.
-Once you've modified what you need to, run the script to generate your tfrecord files.
+Once you have your annotation files, modify `dict2tfrecords_basic.py` in `AMT_annotation` folder (a script that converts inputs to tfrecord format)
+to contain your annotation information. Once you've modified what you need to, run the script to generate your tfrecord files.
 
 By the end of this, you should have a directory containing a number of tfrecord files --this is what we call **$DATASET_DIR**.
 
@@ -313,36 +312,34 @@ python export_pose.py \
 
 |Name|                             Description|
 |----------------------------------|-----------|
-|csv_extract_parts_actions_top.py |  extract from csv the annotations and parts and creates a dictiorary|
-|AMT2tfrecords.py               |    convert dictionary data to tf format and split it into train, val, test dataset|
-|AMT2tfrecords_separate.py      |    convert dictiornary data of one mouse to tf format and split it into train, val, test dataset|
+|cmds_front_allset.txt|               list of commands to run on bash the pose detector for front view videos|
+|cmds_top_allset.txt|                 list of commands to run on bash the pose detector for top view vidoes|
 |compute_sigmas.py     |             compute sigmas from annotation to insert in the configuration file|
 |config.py               |           read configuration file|
-|create_tfrecords.py      |          utility to convert dictionary to tf format|
-|heatmaps_tfrecords.py       |       if you want to precompute heatmaps|
-|inputs.py                   |       utility to prepare input pipeline to network|
-|train_inputs.py               |     input nodes to pipeline|
-|train_inputs_precomputed.py    |    this is used when you precomputed the heatmaps using heatmaps_tfrecords|
-|train_inputs_old.py            |    ignore this|
-|visualize_inputs.py           |     visualize that the tf records created are ok as well as the heatmaps|
-|model.py                      |     hourglass model|
-|model_old.py                  |     ignore this|
-|loss.py                        |    loss function|
-|train.py                        |   train|
-|train_custom.py                 |   train with possibility to set on the fly parameters of learning and optimization regardless the config file|
-|val_keypoints.sh                 | utility to evaluate training with validation set to see when to stop the training stage|
-|eval.py                          |  utlity to evalaute hourglass with coco eval saving pickle file for other utilities|
-|eval_original.py                 |  same as eval but used with matteo_exp_coco to save images|
-|eval_input.py                   |   input pipeline for eval|
-|visualize_eval.py               |   visualize evaluation of keypoints detection with separate images for each keypoint|
-|visualize_eval_heatmaps.py      |   visusalize evaluation of keypoints heatmaps|
 |detect.py                       |   inference of keypoints on unseen images|
 |detect_inputs.py                |   utility to  prepare input batch for detection|
 |detect_inputs_imsize.py         |   utility to  prepare input batch for detection  using image size|
+|detect_vis.py                  |    utlity to plot estimated keypoints on validation set|
+|eval.py                          |  utlity to evalaute hourglass with coco eval saving pickle file for other utilities|
+|eval_input.py                   |   input pipeline for eval|
+|export_pose.py|                     utility to export pose in .pb format|
+|get_GT_from_tfrecords.py         |  utility to extract ground truth infomation from tfrecords|
+|inputs.py                   |       utility to prepare input pipeline to network|
+|loss.py                        |    loss function|
+|model.py                      |     hourglass model|
+|pck_amt_pd_front.py|                utility to plot pck curve for front view |
+|pck_amt_pd_top.py|                  utility to plot pck curve for top view|
+|plot_pose_confs.py|                    utility to plot pose as overlay on frame w.r.t confidence score|
+|plot_pose_congs_coco.py             utility to plot pose as overlay on frame w.r.t. coco sigmas|
+|prcurve.py                          uility to plot precision-recall curve|
+|prcurve_prep_data.py|               utility to fetch predictions and ground truth used after for performance metrics|
+|train.py                        |   train|
+|train_inputs.py               |     input nodes to pipeline|
 |visualize_detect.py              |  visualize predicted keypoints on different images per keypoint|
-|detect_wbbox.py                  |  optimized version of detect where we impose to find the maxima within the bounding box rescaled to input size and image size coordinates of keypoints|
-|my_plot_pose_conf.py             |  plot predicted keypoints taking into accounts cofindence and drawing skeleton|
-|my_ply_pose_congs_separate.py    |  same but for separate mice detection|
-|my_prcurve_prep_data.py           | similar to eval saves gt and prediction for later use|
-|my_prcurve.py                     | compute pr curves from save evaluation|
+|visualize_eval.py               |   visualize evaluation of keypoints detection with separate images for each keypoint|
+|visualize_eval_heatmaps.py      |   visusalize evaluation of keypoints heatmaps|
+|visualize_eval_saveim.py      |   visusalize evaluation of keypoints heatmaps on fullsize image|
+|visualize_inputs.py           |     visualize that the tf records created are ok as well as the heatmaps|
+
+
 
