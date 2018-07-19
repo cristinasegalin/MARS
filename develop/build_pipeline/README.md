@@ -1,8 +1,8 @@
 # OPTIMIZED PIPELINE
 
-Here are the file to export optimized model of detection and pose, and to test the new optimized pipeline
+Here are thes step to export optimized model of detection and pose, and to test the new optimized pipeline
 
-The models can be found [here](https://www.dropbox.com/home/team_folder/MARS/D_pipeline_opt_1.1)
+The models can be found [here](http://www.vision.caltech.edu/~segalinc/git_data/develop/): `front_detection.zip, front_pose.zip, top_detection.zip, top_pose.zip`
 
 Be sure to have installed tensorflow 1.1 by source as you will need as well the tensorflow folder to compile some files (in case).
 
@@ -108,8 +108,13 @@ The script that wrap all the graphs, pre processing, post processing a and basic
 
 |Filename | Description|
 |---------|------------|
+|cmd_conversion.txt| bash command to export all the models|
+|export.py| generic utility to export a model|
 |export_detection.py | Utility to export the Multibox detection model|
-|export_pose.py | utility to export the Hourglass pose model|
+|export_pose.py | utility to export the Hourglass pose model
+|export_pose.py | utility to export the Hourglass pose model on only one mouse|
+|model_detection.py| detection model used when exporting|
+|model_pose.py| pose model used when exporting|
 |optimized_pipeline.py| main script to run the pipeline|
 
 
