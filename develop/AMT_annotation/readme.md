@@ -1,4 +1,4 @@
-## A_annotation
+## AMT_annotation
 This folder contains all you need to collect, extract, process frames and export information from annotation
 
 1. extracts frames from videos you want to annotate
