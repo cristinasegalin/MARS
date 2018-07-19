@@ -1,8 +1,9 @@
 # MARS - Mouse Action Recognition System
 
 In this repoistory we present MARS, a mouse tracker and behavior classifier tool.
-The system pipeline follow:
+Dataset, more info and documentation can be found on [MARS website](http://www.vision.caltech.edu/~segalinc)
 
+The system pipeline is composed by 2 mouse detectors, a pose detector, features extraction and behavior classifiers.
 
 ![pipeline](https://github.com/cristinasegalin/MARS/blob/master/pipeline.png)
 
