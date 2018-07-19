@@ -26,5 +26,5 @@ and export the models.
 
 ### Behavior annotator used
 
-- Caltech behavior annotator (part of [Piotr's Toolbox](https://pdollar.github.io/toolbox/)
+- Caltech behavior annotator (part of [Piotr's Toolbox](https://pdollar.github.io/toolbox/))
 
