@@ -6,7 +6,8 @@ The system pipeline follow:
 
 ![pipeline](https://github.com/cristinasegalin/MARS/blob/master/pipeline.png)
 
-Here you can find two folders:
+## In this repo:
+
 - **develop** : all you need to build the pipepline step by step, from the annotation, detection, pose, behavior classifiers
 and export the models.
 - **gui**: the MARS gui software ready to to use.
