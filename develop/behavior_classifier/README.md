@@ -24,4 +24,4 @@ Pretrained model can be found [here](http://www.vision.caltech.edu/~segalinc/git
 |top_wnd_interaction.py| train and test calssifier on top features windowed for just interacion behavior|
 
 
-## INTERACTIVE TRAINING COMING SOON!
+## INTERACTIVE TRAINING OF CLASSIFIERS COMING SOON!
