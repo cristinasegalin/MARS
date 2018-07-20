@@ -15,10 +15,13 @@ Pretrained model can be found [here](http://www.vision.caltech.edu/~segalinc/git
 |Filename | Description|
 |---------|------------|
 |top.py| train and test classifier on top features|
-|top_interaction| train and test calssifier on top features for just interacion behavior|
+|top_interaction.py| train and test calssifier on top features for just interacion behavior|
 |top_pcf.py| train and test classifier on top and front pixel change features|
-|top_interaction| train and test calssifier on top and front pixel change features for just interacion behavior|
+|top_interaction.py train and test calssifier on top and front pixel change features for just interacion behavior|
 |top_pcf_wnd.py| train and test classifier on top and front pixel change features windowed|
-|top_pcf_wnd_interaction| train and test calssifier on top and front pixel change features windowed for just interacion behavior|
+|top_pcf_wnd_interaction.py| train and test calssifier on top and front pixel change features windowed for just interacion behavior|
 |top_wnd.py| train and test classifier on top features windowed|
-|top_wnd_interaction| train and test calssifier on top features windowed for just interacion behavior|
+|top_wnd_interaction.py| train and test calssifier on top features windowed for just interacion behavior|
+
+
+## INTERACTIVE TRAINING OF CLASSIFIERS COMING SOON!
