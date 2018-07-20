@@ -37,6 +37,7 @@ from sklearn import preprocessing
 import json
 from sklearn.utils import shuffle
 from xgboost import XGBClassifier
+import joblib
 
 warnings.filterwarnings("ignore")
 plt.ioff()
@@ -82,7 +83,7 @@ label2id = {'other': 0,
 flatten = lambda *n: (e for a in n for e in (flatten(*a) if isinstance(a, (tuple, list)) else (a,)))
 
 
-def choose_classfier(classifier_type):
+def choose_classfier(classifier_type,n_trees=500):
     if classifier_type == 0:
         mlp = MLPClassifier(solver='adam', alpha=0.0001, hidden_layer_sizes=(256, 512), random_state=1,
                             learning_rate='adaptive', max_iter=100000,
@@ -92,7 +93,7 @@ def choose_classfier(classifier_type):
         clf_name = 'mlp'
 
     if classifier_type == 1:
-        clf = XGBClassifier(n_estimators=2000, random_state=1, n_jobs=-1)
+        clf = XGBClassifier(n_estimators=n_trees, random_state=1, n_jobs=-1)
         clf_name = 'xgb'
 
     return clf, clf_name
@@ -266,7 +267,7 @@ def load_data_train(video_list, video_path,ver):
     labels = []
 
     for v in video_list:
-        vid = dill.load(open(video_path+v+'/output_v1_%d/' % ver + v +'/'+v + '_raw_feat_top_v1_%d_wnd.dill'% ver, 'rb'))
+        vid = np.load(open(video_path+v+'/'+v + '_raw_feat_top_v1_%d_wnd.npz'% ver, 'rb'))
         d=vid['data']
         data.append(d)
 
@@ -308,7 +309,7 @@ def load_data_test(video_list, video_path, scaler,ver):
     labels = []
 
     for v in video_list:
-        vid = dill.load(open(video_path+v+'/output_v1_%d/' % ver + v +'/'+v + '_raw_feat_top_v1_%d_wnd.dill'% ver, 'rb'))
+        vid = np.load(open(video_path+v+'/'+v + '_raw_feat_top_v1_%d_wnd.npz'% ver, 'rb'))
         d=vid['data']
         data.append(d)
 
@@ -600,10 +601,9 @@ te_msoff=['Mouse206_20170224_19-58-42_027309_037147',
 
 
 
-video_path = '/home/ubuntu/efs/tomomi_miniscope/'
-# video_path = '/media/cristina/MARS_data/mice_project/tomomi_miniscope/'
+video_path = '/home/segalinc/tomomi_miniscope/'
 
-for clf_n in range(2):
+for clf_n in range(1,2):
     for d in range(3):
         if d==0:
             train_videos =tr_to
@@ -632,14 +632,14 @@ for clf_n in range(2):
         n_classes = len(behs)
         kn = np.array([.5, .25, .5])
         blur = 4;shift = 4;blur_steps = blur ** 2
-        ver=6
+        ver=7
         f = open(savedir + 'log_selection.txt', 'a')
         original = sys.stdout
         sys.stdout = Tee(sys.stdout, f)
 
         print('loading data')
         X_tr, y_tr, scaler, features = load_data_train(train_videos, video_path,ver)
-        dill.dump(scaler, open(savedir + 'scaler.dill', 'wb'))
+        joblib.dump(scaler, savedir + 'scaler')
 
         X_te, y_te = load_data_test(test_videos, video_path, scaler,ver)
         print('data loaded')
@@ -728,7 +728,7 @@ for clf_n in range(2):
                           'hmm':hmm_bin,
                           'hmm_fbs':hmm_fbs
                           }
-        dill.dump(beh_classifier, open(savedir + 'classifier_' + behs[b], 'wb'))
+        joblib.dump(beh_classifier, savedir + 'classifier_' + behs[b])
 
         t=time.time()
         len_y = len(y_te)

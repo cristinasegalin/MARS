@@ -37,23 +37,24 @@ from sklearn import preprocessing
 import json
 from sklearn.utils import shuffle
 from xgboost import XGBClassifier
+import joblib
 
 warnings.filterwarnings("ignore")
 plt.ioff()
 flatten = lambda *n: (e for a in n for e in (flatten(*a) if isinstance(a, (tuple, list)) else (a,)))
 
 
-def choose_classfier(classifier_type):
+def choose_classfier(classifier_type,n_trees=500):
     if classifier_type == 0:
         mlp = MLPClassifier(solver='adam', alpha=0.0001, hidden_layer_sizes=(256, 512), random_state=1,
                             learning_rate='adaptive', max_iter=100000,
                             learning_rate_init=.001, verbose=0)
-        clf = BaggingClassifier(mlp, max_samples=.1, n_jobs=-1, random_state=7, verbose=0)
+        clf = BaggingClassifier(mlp, max_samples=.1, n_jobs=3, random_state=7, verbose=0)
 
         clf_name = 'mlp'
 
     if classifier_type == 1:
-        clf = XGBClassifier(n_estimators=2000, random_state=1, n_jobs=-1)
+        clf = XGBClassifier(n_estimators=n_trees, random_state=1, n_jobs=-1)
         clf_name = 'xgb'
 
     return clf, clf_name
@@ -227,7 +228,7 @@ def load_data_train(video_list, video_path,ver):
     labels = []
 
     for v in video_list:
-        vid = dill.load(open(video_path+v+'/output_v1_%d/' % ver + v +'/'+v + '_raw_feat_top_pcf_v1_%d_wnd.dill'% ver, 'rb'))
+        vid = np.load(open(video_path+v+'/'+v + '_raw_feat_top_pcf_v1_%d_wnd.npz'% ver, 'rb'))
         d=vid['data']
         data.append(d)
 
@@ -269,7 +270,7 @@ def load_data_test(video_list, video_path, scaler,ver):
     labels = []
 
     for v in video_list:
-        vid = dill.load(open(video_path+v+'/output_v1_%d/' % ver + v +'/'+v + '_raw_feat_top_pcf_v1_%d_wnd.dill'% ver, 'rb'))
+        vid = np.load(open(video_path+v+'/'+v + '_raw_feat_top_pcf_v1_%d_wnd.npz'% ver, 'rb'))
         d=vid['data']
         data.append(d)
 
@@ -614,7 +615,7 @@ for clf_n in range(2):
             test_videos = te_to+te_msoff
             dataset = 'tm'
 
-        video_path = '/home/ubuntu/efs/tomomi_miniscope/'
+        video_path = '/home/segalinc/tomomi_miniscope/'
 
         suff = str(n_trees) if clf_n==1 else ''
         classifier, clf_name = choose_classfier(clf_n)
@@ -630,7 +631,7 @@ for clf_n in range(2):
         n_classes = len(behs)
         kn = np.array([.5, .25, .5])
         blur = 4;shift = 4;blur_steps = blur ** 2
-        ver=6
+        ver=7
         f = open(savedir + 'log_selection.txt', 'a')
         original = sys.stdout
         sys.stdout = Tee(sys.stdout, f)
@@ -726,7 +727,7 @@ for clf_n in range(2):
                           'hmm':hmm_bin,
                           'hmm_fbs':hmm_fbs
                           }
-        dill.dump(beh_classifier, open(savedir + 'classifier_' + behs[b], 'wb'))
+        joblib.dump(beh_classifier, savedir + 'classifier_' + behs[b])
 
         t=time.time()
         len_y = len(y_te)
